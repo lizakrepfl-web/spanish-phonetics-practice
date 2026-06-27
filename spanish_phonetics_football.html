@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Фонетика испанского ⚽</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #1a5c2a 0%, #0d3b18 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #fff;
+  }
+  h1 {
+    text-align: center;
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+    color: #f0e040;
+    text-shadow: 1px 2px 6px rgba(0,0,0,0.5);
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #a8d8a8;
+    margin-bottom: 20px;
+  }
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .tab {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 7px 14px;
+    border-radius: 22px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .tab:hover { background: rgba(255,255,255,0.22); }
+  .tab.active {
+    background: #f0e040;
+    color: #1a5c2a;
+    border-color: #f0e040;
+  }
+  .card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 18px;
+    padding: 22px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .sound-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .sound-badge {
+    background: #f0e040;
+    color: #1a5c2a;
+    font-size: 2rem;
+    font-weight: 900;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+  }
+  .sound-info h2 { font-size: 1.15rem; color: #f0e040; margin-bottom: 4px; }
+  .sound-info p { font-size: 0.83rem; color: #c8e6c9; line-height: 1.4; }
+  .section {
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 13px 16px;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #80cbc4;
+    margin-bottom: 9px;
+    font-weight: 700;
+  }
+  .exercise-text {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: #f0f4f0;
+  }
+  .tip {
+    background: rgba(255,152,0,0.15);
+    border-left: 3px solid #ffa726;
+    border-radius: 0 8px 8px 0;
+    padding: 8px 12px;
+    font-size: 0.82rem;
+    color: #ffe0b2;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+  .words-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .word-chip {
+    background: rgba(240,224,64,0.12);
+    border: 1px solid rgba(240,224,64,0.35);
+    border-radius: 9px;
+    padding: 5px 11px;
+    font-size: 0.87rem;
+    line-height: 1.4;
+  }
+  .word-chip .sp { color: #f0e040; font-weight: bold; }
+  .twister {
+    font-size: 1.0rem;
+    line-height: 1.7;
+    color: #e8f5e9;
+    font-style: italic;
+  }
+  .twister .hl { color: #f0e040; font-style: normal; font-weight: bold; font-size: 1.1em; }
+  .translation {
+    font-size: 0.78rem;
+    color: #a5d6a7;
+    margin-top: 6px;
+    font-style: normal;
+  }
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+  }
+  .nav-btn {
+    background: rgba(240,224,64,0.15);
+    border: 1px solid rgba(240,224,64,0.4);
+    color: #f0e040;
+    padding: 7px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { background: rgba(240,224,64,0.3); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .progress-text {
+    font-size: 0.78rem;
+    color: #a5d6a7;
+  }
+</style>
+</head>
+<body>
+
+<h1>⚽ Фонетика испанского</h1>
+<p class="subtitle">Учим звуки — думаем о футболе</p>
+
+<div class="tabs" id="tabs"></div>
+<div id="content"></div>
+
+<script>
+const sounds = [
+  {
+    tab: "A", badge: "A",
+    title: "Звук [a] — открытый и чистый",
+    desc: "Как русское «А», только ещё более открыто: рот широко открыт, язык лежит плоско внизу.",
+    artic: "Открой рот широко, как будто кричишь «ГОЛ!» на стадионе. Язык не напрягай, он просто лежит.",
+    tip: "Не зажимай челюсть — в испанском «а» всегда открытое, никогда не «проглоченное».",
+    words: [
+      { sp: "ár-bi-tro", ru: "арбитр" },
+      { sp: "A-ta-que", ru: "атака" },
+      { sp: "cam-pe-ón", ru: "чемпион" },
+      { sp: "pá-se", ru: "пас" },
+    ],
+    exercise: "Скандируй, как на трибунах: «¡Gol! ¡Gol! ¡Gol!» — «а» должна звучать одинаково чисто каждый раз. Затем: «at-a-que» по слогам.",
+    twister: "El <span class='hl'>á</span>rbitro <span class='hl'>a</span>nul<span class='hl'>a</span> el <span class='hl'>a</span>t<span class='hl'>a</span>que del del<span class='hl'>a</span>ntero.",
+    tl: "Арбитр отменяет атаку нападающего."
+  },
+  {
+    tab: "E", badge: "E",
+    title: "Звук [e] — закрытый и чёткий",
+    desc: "Как русское «Э», но без дифтонга. Испанский «е» всегда одинаковый — не «ей», не «йэ»!",
+    artic: "Губы слегка растянуты в улыбке. Язык касается нижних зубов. Удержи форму — не скользи в «и» в конце!",
+    tip: "Русская «е» в начале слова звучит как «йэ». В испанском — только чистое [e], без «й» перед ней.",
+    words: [
+      { sp: "e-qui-po", ru: "команда" },
+      { sp: "es-ta-dio", ru: "стадион" },
+      { sp: "en-tre-na-dor", ru: "тренер" },
+      { sp: "pe-nal-ti", ru: "пенальти" },
+    ],
+    exercise: "Повтори цепочку: «e-qui-po — es-ta-dio — en-tre-na-dor». Следи, чтобы каждое «е» звучало одинаково — коротко и чётко.",
+    twister: "El <span class='hl'>e</span>quipo <span class='hl'>e</span>ntró al <span class='hl'>e</span>stadio con <span class='hl'>e</span>nergía y <span class='hl'>e</span>moción.",
+    tl: "Команда вошла на стадион с энергией и эмоцией."
+  },
+  {
+    tab: "I", badge: "I",
+    title: "Звук [i] — высокий и краткий",
+    desc: "Как русское «И», но короче и напряжённее. Губы растянуты, язык высоко у нёба.",
+    artic: "Растяни губы в максимальную улыбку (как для фото). Язык прижат к нижним зубам. Звук резкий и короткий.",
+    tip: "Не тяни «и» в конце слова — испанский любит чёткость. «futbolista» — не «футболиистаа»!",
+    words: [
+      { sp: "fut-bo-lis-ta", ru: "футболист" },
+      { sp: "ti-ro", ru: "удар" },
+      { sp: "por-te-rí-a", ru: "ворота" },
+      { sp: "mí-ni-mo", ru: "минимальный" },
+    ],
+    exercise: "Произнеси «fut-bol-is-ta» по слогам, медленно. Обрати внимание: «is» — очень короткое «и». Затем ускоряй.",
+    twister: "El delanterito <span class='hl'>i</span>mpacta <span class='hl'>i</span>nfin<span class='hl'>i</span>tas veces el balón <span class='hl'>i</span>nfatigable.",
+    tl: "Маленький нападающий неустанно бьёт по мячу бесчисленное количество раз."
+  },
+  {
+    tab: "O", badge: "O",
+    title: "Звук [o] — чистое, без дифтонга",
+    desc: "Как русское «О», но без скольжения в «у» в конце. Губы округлые и остаются стабильными.",
+    artic: "Округли губы трубочкой. Удержи форму до конца звука — не уходи в «у»! Как будто дуешь на свечу.",
+    tip: "Английское «goal» = «гоул» (дифтонг). Испанское «gol» = чистое [о], никакого скольжения!",
+    words: [
+      { sp: "gol", ru: "гол" },
+      { sp: "o-fen-sa", ru: "атака / нападение" },
+      { sp: "blo-que-o", ru: "блокировка" },
+      { sp: "por-te-ro", ru: "вратарь" },
+    ],
+    exercise: "Скандируй, как на стадионе: «¡GO-OL!» — удержи «О» идеально круглым на протяжении всего крика. Записать себя на телефон и послушать.",
+    twister: "El <span class='hl'>go</span>leador <span class='hl'>lo</span>gró el g<span class='hl'>ol</span> con un poderoso del<span class='hl'>o</span>r en la p<span class='hl'>or</span>tería.",
+    tl: "Бомбардир забил гол мощным ударом по воротам."
+  },
+  {
+    tab: "U", badge: "U",
+    title: "Звук [u] — тёмное и округлое",
+    desc: "Как русское «У» — губы вытянуты вперёд трубочкой, напряжены. Язык оттянут назад.",
+    artic: "Максимально вытяни губы вперёд, как будто дуешь на горячий чай. Щёки немного напряжены.",
+    tip: "В сочетаниях «que/qui» буква «u» не читается! «que» = [ке], «qui» = [ки]. В «gue/gui» — тоже молчит.",
+    words: [
+      { sp: "u-nión", ru: "единство (команды)" },
+      { sp: "club", ru: "клуб" },
+      { sp: "es-cu-do", ru: "герб клуба" },
+      { sp: "mu-ro", ru: "стенка (при штрафном)" },
+    ],
+    exercise: "Скажи: «El club tiene un escudo único» — при каждом «u» проверяй: губы трубочкой, язык сзади.",
+    twister: "El <span class='hl'>cl</span>ub <span class='hl'>u</span>nido l<span class='hl'>u</span>chó con org<span class='hl'>u</span>llo en el m<span class='hl'>u</span>ndial.",
+    tl: "Сплочённый клуб боролся с гордостью на чемпионате мира."
+  },
+  {
+    tab: "RR/R", badge: "R",
+    title: "Звуки [r] и [rr] — вибрирующие",
+    desc: "[r] — одно касание языка об альвеолы. [rr] — раскатистое многократное вибрирование.",
+    artic: "Кончик языка у альвеол (бугорки сразу за верхними зубами). Выдохни воздух — язык завибрирует. Главное — расслабить язык!",
+    tip: "В начале слова и после N, L, S — всегда сильное [rr]. Между гласными — слабое [r]. «regate» читается с раскатом.",
+    words: [
+      { sp: "re-ga-te", ru: "дриблинг [rr сильное]" },
+      { sp: "por-te-ro", ru: "вратарь [r слабое]" },
+      { sp: "ta-rje-ta ro-ja", ru: "красная карточка" },
+      { sp: "ti-ro li-bre", ru: "свободный удар" },
+    ],
+    exercise: "Начни с быстрого «д-д-д-д» — кончик языка бьёт по альвеолам. Постепенно добавляй голос и выдох. Это и будет «rr». Потом: «rr-a-a», «re-ga-te».",
+    twister: "<span class='hl'>R</span>ápido <span class='hl'>r</span>egate: el delante<span class='hl'>r</span>o <span class='hl'>r</span>egatea al po<span class='hl'>r</span>te<span class='hl'>r</span>o con arte.",
+    tl: "Быстрый дриблинг: нападающий обыгрывает вратаря с мастерством."
+  },
+  {
+    tab: "J/G", badge: "J",
+    title: "Звук [x] — буквы J и G(e,i)",
+    desc: "Похоже на русское «Х», но глубже в горле — как будто тихо прочищаешь горло.",
+    artic: "Корень языка поднимается к мягкому нёбу. Выдыхай воздух с трением. Глубже, чем «Х», но не громко.",
+    tip: "«juego» = [хуэго]. Не как английское «дж»! Буква G перед e и i тоже читается как [х]: «general» = [хенераль].",
+    words: [
+      { sp: "jue-go", ru: "игра / матч" },
+      { sp: "ju-ga-dor", ru: "игрок" },
+      { sp: "je-fe", ru: "шеф / тренер" },
+      { sp: "ge-ren-te", ru: "менеджер клуба" },
+    ],
+    exercise: "Скажи тихонько «Хх-х» из глубины горла, потом добавляй гласные: «ху-э-го». Получается «juego»! Затем: «ju-ga-dor».",
+    twister: "El <span class='hl'>j</span>ugador <span class='hl'>j</span>oven <span class='hl'>j</span>ugó magistralmente en el gran <span class='hl'>j</span>uego.",
+    tl: "Молодой игрок мастерски сыграл в большом матче."
+  },
+  {
+    tab: "LL/Y", badge: "Ʌ",
+    title: "Звук [ʝ] — буквы LL и Y",
+    desc: "В современном испанском LL и Y звучат одинаково — примерно как мягкое «Й» или чуть насыщеннее.",
+    artic: "Средняя часть языка приближается к нёбу. Звук голосовой, между «й» и «дж» — без взрыва, мягко.",
+    tip: "В Испании ближе к «й», в Аргентине — к «ш». Выбери один вариант с учеником и придерживайтесь его.",
+    words: [
+      { sp: "ya", ru: "уже / да!" },
+      { sp: "lle-gar", ru: "прийти" },
+      { sp: "a-ma-ri-llo", ru: "жёлтый (карточка)" },
+      { sp: "yo mar-co", ru: "я забиваю" },
+    ],
+    exercise: "Скандируй: «¡Ya! ¡Ya! ¡Ya!» как болельщики. Затем: «¡Yo marco!» — звук «й» в начале. Потом: «a-ma-ri-llo» по слогам.",
+    twister: "<span class='hl'>Ll</span>egó el del <span class='hl'>ll</span>ano <span class='hl'>ll</span>evando el balón <span class='hl'>y</span>a hasta el área de la portería.",
+    tl: "Пришёл игрок с равнины, уже неся мяч к штрафной площади ворот."
+  },
+  {
+    tab: "Ñ", badge: "Ñ",
+    title: "Звук [ɲ] — буква Ñ",
+    desc: "Как русское «НЬ» в словах «нянька» или «ноябрь» — мягкое носовое н.",
+    artic: "Средняя часть языка прижата к нёбу (выше, чем при [n]). Воздух идёт через нос. Чуть приоткрой рот.",
+    tip: "Ñ — буква только испанского алфавита, символ языка. Не путай с обычным N!",
+    words: [
+      { sp: "Es-pa-ña", ru: "Испания" },
+      { sp: "cam-peo-na-to", ru: "чемпионат" },
+      { sp: "pu-ño", ru: "кулак (жест победы)" },
+      { sp: "a-com-pa-ñar", ru: "сопровождать (команду)" },
+    ],
+    exercise: "Скажи «ня-ня-ня» по-русски, затем «ña-ña-ña» по-испански — звук тот же. Теперь вставь в слово: Es-pa-ña. Медленно, потом быстрее.",
+    twister: "Es<span class='hl'>pa</span>ña ga<span class='hl'>nó</span> el campeona<span class='hl'>to</span> con el pe<span class='hl'>ñ</span>ón de la pa<span class='hl'>si</span>ón futbolística.",
+    tl: "Испания завоевала чемпионат с огромной футбольной страстью."
+  },
+  {
+    tab: "C/Z", badge: "Ç",
+    title: "Звук [θ] — буквы C(e,i) и Z",
+    desc: "Межзубное «с» — как английское «th» в слове «think». Кончик языка между зубами!",
+    artic: "Высуни кончик языка слегка между зубами и выдыхай — получится мягкое шипение. Не убирай язык раньше времени!",
+    tip: "Только в Испании. В Латинской Америке C(e,i) и Z = обычное [с]. Но для испанского акцента — межзубной!",
+    words: [
+      { sp: "ca-be-ce-ar", ru: "бить головой" },
+      { sp: "cen-tro", ru: "центр поля" },
+      { sp: "za-ga", ru: "защита / оборона" },
+      { sp: "cam-pe-ón", ru: "чемпион" },
+    ],
+    exercise: "Скажи по-английски «think» — почувствуй язык между зубами. Теперь так же: «ce», «ci», «za», «zo», «zu». Затем: «ca-be-ce-ar».",
+    twister: "El <span class='hl'>c</span>entrocampista <span class='hl'>c</span>ele<span class='hl'>br</span>ó el tri<span class='hl'>un</span>fo con la <span class='hl'>z</span>aga y la afi<span class='hl'>ción</span>.",
+    tl: "Полузащитник праздновал победу вместе с защитниками и болельщиками."
+  },
+];
+
+let current = 0;
+
+function renderTabs() {
+  document.getElementById('tabs').innerHTML = sounds.map((s, i) =>
+    `<button class="tab ${i===current?'active':''}" onclick="show(${i})">${s.tab}</button>`
+  ).join('');
+}
+
+function renderContent() {
+  const s = sounds[current];
+  document.getElementById('content').innerHTML = `
+    <div class="card">
+      <div class="sound-header">
+        <div class="sound-badge">${s.badge}</div>
+        <div class="sound-info">
+          <h2>${s.title}</h2>
+          <p>${s.desc}</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">⚽ Артикуляция</div>
+        <div class="exercise-text">${s.artic}</div>
+        <div class="tip">💡 ${s.tip}</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">📋 Футбольный словарик</div>
+        <div class="words-grid">
+          ${s.words.map(w => `
+            <div class="word-chip">
+              <span class="sp">${w.sp}</span><br>
+              <span style="color:#a5d6a7;font-size:0.78rem;">${w.ru}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">🏃 Упражнение</div>
+        <div class="exercise-text">${s.exercise}</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">🎯 Скороговорка с нужным звуком</div>
+        <div class="twister">${s.twister}</div>
+        <div class="translation">— ${s.tl}</div>
+      </div>
+
+      <div class="nav-row">
+        <button class="nav-btn" onclick="show(${current-1})" ${current===0?'disabled':''}>← Назад</button>
+        <span class="progress-text">${current+1} / ${sounds.length}</span>
+        <button class="nav-btn" onclick="show(${current+1})" ${current===sounds.length-1?'disabled':''}>Далее →</button>
+      </div>
+    </div>
+  `;
+}
+
+function show(i) {
+  if (i < 0 || i >= sounds.length) return;
+  current = i;
+  renderTabs();
+  renderContent();
+  window.scrollTo(0, 0);
+}
+
+renderTabs();
+renderContent();
+</script>
+</body>
+</html>
